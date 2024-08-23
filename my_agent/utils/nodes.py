@@ -12,7 +12,7 @@ def should_continue(state):
     messages = state["messages"]
 
     # Randomly decide whether to continue or end
-    if random.random() < 0.7:
+    if random.random() < 0.25:
         return "end"
     else:
         return "continue"
