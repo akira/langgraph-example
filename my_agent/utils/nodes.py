@@ -10,7 +10,6 @@ import random
 # Define the function that determines whether to continue or not
 def should_continue(state):
     messages = state["messages"]
-    another_trace_method(messages)
 
     # Randomly decide whether to continue or end
     if random.choice([True, False]):
@@ -36,6 +35,9 @@ def call_model(state, config):
     random_words = ["The", "quick", "brown", "fox", "jumps", "over", "lazy", "dog"]
     simulated_content = " ".join(random.choices(random_words, k=10))
     response = {"role": "assistant", "content": simulated_content}
+
+    another_trace_method(messages)
+
     # We return a list, because this will get added to the existing list
     return {"messages": [response]}
 
