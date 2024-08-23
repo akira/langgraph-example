@@ -3,31 +3,28 @@ from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 from my_agent.utils.tools import tools
 from langgraph.prebuilt import ToolNode
+from langsmith import traceable
+import random
 
-
-@lru_cache(maxsize=4)
-def _get_model(model_name: str):
-    if model_name == "openai":
-        model = ChatOpenAI(temperature=0, model_name="gpt-4o")
-    elif model_name == "anthropic":
-        model =  ChatAnthropic(temperature=0, model_name="claude-3-sonnet-20240229")
-    else:
-        raise ValueError(f"Unsupported model type: {model_name}")
-
-    model = model.bind_tools(tools)
-    return model
 
 # Define the function that determines whether to continue or not
 def should_continue(state):
     messages = state["messages"]
-    last_message = messages[-1]
-    # If there are no tool calls, then we finish
-    if not last_message.tool_calls:
+    another_trace_method(messages)
+
+    # Randomly decide whether to continue or end
+    if random.choice([True, False]):
         return "end"
-    # Otherwise if there is, we continue
     else:
         return "continue"
 
+@traceable(name="method_1", run_type="chain", metadata={"thread_id": random.choice(["thread_1", "thread_2", "thread_3", "thread_4", "thread_5"])})
+def another_trace_method(messages):
+    one_more_trace_method(messages)
+
+@traceable(name="method_2", run_type="llm")
+def one_more_trace_method(messages):
+    pass
 
 system_prompt = """Be a helpful assistant"""
 
@@ -35,9 +32,10 @@ system_prompt = """Be a helpful assistant"""
 def call_model(state, config):
     messages = state["messages"]
     messages = [{"role": "system", "content": system_prompt}] + messages
-    model_name = config.get('configurable', {}).get("model_name", "anthropic")
-    model = _get_model(model_name)
-    response = model.invoke(messages)
+
+    random_words = ["The", "quick", "brown", "fox", "jumps", "over", "lazy", "dog"]
+    simulated_content = " ".join(random.choices(random_words, k=10))
+    response = {"role": "assistant", "content": simulated_content}
     # We return a list, because this will get added to the existing list
     return {"messages": [response]}
 
