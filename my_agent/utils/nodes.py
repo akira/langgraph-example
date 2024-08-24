@@ -17,7 +17,7 @@ def should_continue(state):
     else:
         return "continue"
 
-@traceable(name="method_1", run_type="chain", metadata={"thread_id": random.choice(["thread_1", "thread_2", "thread_3", "thread_4", "thread_5"])})
+@traceable(name="method_1", run_type="chain")
 def another_trace_method(messages):
     one_more_trace_method(messages)
 
