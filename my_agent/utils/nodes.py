@@ -45,6 +45,8 @@ def call_model(state, config):
     response = {"role": "assistant", "content": simulated_content, "data": output_data}
 
     another_trace_method(messages)
+    another_trace_method(response)
+    del response["data"]
 
     # We return a list, because this will get added to the existing list
     return {"messages": [response]}
