@@ -6,6 +6,8 @@ from langgraph.prebuilt import ToolNode
 from langsmith import traceable
 import random
 
+data_sizes = [20, 10240, 25600, 102400, 1048576, 5242880]
+data_array = ["x" * size for size in data_sizes]
 
 # Define the function that determines whether to continue or not
 def should_continue(state):
@@ -29,13 +31,8 @@ system_prompt = """Be a helpful assistant"""
 
 # Define the function that calls the model
 def call_model(state, config):
-    # Generate random data size
-    data_sizes = [20, 10240, 25600, 102400, 1048576, 5242880]
-    input_size = random.choice(data_sizes)
-    output_size = random.choice(data_sizes)
-
-    input_data = "x" * input_size
-    output_data = "y" * output_size
+    input_data = random.choice(data_array)
+    output_data = random.choice(data_array)
 
     messages = state["messages"]
     messages = [{"role": "system", "content": system_prompt, "data": input_data}] + messages
