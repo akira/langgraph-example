@@ -6,8 +6,17 @@ from langgraph.prebuilt import ToolNode
 from langsmith import traceable
 import random
 
+from nltk.corpus import words
+import nltk
+
+try:
+    word_list = words.words()
+except LookupError:
+    nltk.download('words')
+    word_list = words.words()
+
 data_sizes = [20, 10240, 25600, 102400, 1048576, 5242880]
-data_array = ["x" * size for size in data_sizes]
+data_array = [" ".join(random.choices(word_list, k=(size // 5))) for size in data_sizes]
 
 # Define the function that determines whether to continue or not
 def should_continue(state):
