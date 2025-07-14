@@ -4,4 +4,4 @@ tavily-python
 langchain_community
 langchain_openai
 nltk
-langsmith==0.1.139rc1
+langsmith
