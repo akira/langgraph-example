@@ -1,7 +1,7 @@
 import random
 
 import nltk
-from langsmith import traceable, tracing_context
+from langsmith import trace, traceable
 from nltk.corpus import words
 
 try:
@@ -39,7 +39,7 @@ data_sizes = [
     500000,
 ]
 
-ITERATIONS = 5
+ITERATIONS = 10
 
 data_array = [" ".join(random.choices(word_list, k=(size // 5))) for size in data_sizes]
 
@@ -106,7 +106,11 @@ def call_tool_node(state, config):
     }
 
     for _ in range(ITERATIONS):
-        with tracing_context(enabled=True, parent=False):
+        with trace(
+            "MethodTrace",
+            inputs={"input": input_data},
+            tags=[random.choice(["model:claude", "model:gpt-4o", "model:gpt-4o-mini"])],
+        ):
             another_trace_method(fake_tool_response)
             another_trace_method(fake_tool_response)
 
