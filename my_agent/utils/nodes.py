@@ -1,11 +1,8 @@
 import random
 
 import nltk
-from langgraph.prebuilt import ToolNode
 from langsmith import traceable
 from nltk.corpus import words
-
-from my_agent.utils.tools import tools
 
 try:
     word_list = words.words()
@@ -91,5 +88,19 @@ def call_model(state, config):
     return {"messages": [response]}
 
 
-# Define the function to execute tools
-tool_node = ToolNode(tools)
+def call_tool_node(state, config):
+    # Fake tool node - generate fake output using data_array and random sampling
+    input_data = random.choice(data_array)
+    output_data = random.choice(data_array)
+
+    # Simulate tool execution with fake response
+    fake_tool_response = {
+        "role": "tool",
+        "content": f"Tool executed successfully. Input: {input_data[:100]}... Output: {output_data[:100]}...",
+        "tool_call_id": "123",
+        "name": "tavily_search_results_json",
+        "args": {"query": input_data},
+        "data": output_data,
+    }
+
+    return {"messages": [fake_tool_response]}
